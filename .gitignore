@@ -9,6 +9,7 @@ __pycache__/
 venv/
 env/
 .pytest_cache/
+.coverage
 
 # Models (downloaded locally, never committed)
 models/
