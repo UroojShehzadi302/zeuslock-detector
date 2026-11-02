@@ -89,8 +89,8 @@ zeuslock-detector/
 |---|---|---|
 | 1 | Project setup: folders, virtual env, requirements, dev set | ✅ Done |
 | 2 | Validators: Luhn, IBAN mod-97, NIR key, SSN rules, private IP (+ tests) | ✅ Done |
-| 3 | Regex layer for all structured categories | ⏳ Next |
-| 4 | LLM layer (Ollama) for passwords in prose, addresses, code | ⬜ |
+| 3 | Regex layer for all structured categories (+ tests) | ✅ Done |
+| 4 | LLM layer (Ollama) for passwords in prose, addresses, code | ⏳ Next |
 | 5 | `detect()` + merge + `submission.py` | ⬜ |
 | 6 | Level 1 evaluation: misses, false alarms, speed | ⬜ |
 | 7 | CLI `main.py` (level1 / level2 commands) | ⬜ |
