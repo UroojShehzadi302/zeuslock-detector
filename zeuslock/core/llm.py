@@ -18,6 +18,7 @@ Two questions are asked:
 """
 
 import json
+import logging
 import os
 import re
 
@@ -28,6 +29,9 @@ from zeuslock.core.patterns import is_placeholder, make_finding
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
 MODEL = os.environ.get("ZEUSLOCK_MODEL", "qwen2.5:3b")
 TIMEOUT_SECONDS = 60
+KEEP_ALIVE = "30m"   # keep the model in memory between prompts (reloading costs seconds)
+
+log = logging.getLogger(__name__)
 
 # ---------------- 1. passwords in prose + postal addresses ----------------
 
@@ -111,6 +115,7 @@ def ask_model(system: str, text: str, schema: dict) -> str:
             ],
             "format": schema,
             "stream": False,
+            "keep_alive": KEEP_ALIVE,
             "options": {"temperature": 0},
         },
         timeout=TIMEOUT_SECONDS,
@@ -222,14 +227,17 @@ def is_proprietary(code: str) -> bool:
 
 
 def find_with_llm(text: str) -> list[dict]:
-    """Everything the LLM layer finds. Returns [] if Ollama is not reachable,
-    so the regex layer still works on its own."""
+    """Everything the LLM layer finds. Question 1 runs on every prompt (detection first);
+    question 2 only for the code blocks Python found.
+    Returns [] if Ollama is not reachable, so the regex layer still works on its own."""
     try:
         findings = parse_answer(text, ask_model(FIND_PROMPT, text, FIND_SCHEMA))
         for start, end in find_code_blocks(text):
             if is_proprietary(text[start:end]):
                 # No punctuation trimming: a final ')' or ';' is part of the code.
                 findings.append({"category": "SOURCE_CODE", "start": start, "end": end, "value": text[start:end]})
-    except (requests.RequestException, KeyError, ValueError):
+    except (requests.RequestException, KeyError, ValueError) as error:
+        # Not silent: a timeout here means the LLM layer found nothing for this prompt.
+        log.warning("LLM layer skipped (%s: %s), only regex results are used", type(error).__name__, error)
         return []
     return findings

@@ -93,14 +93,27 @@ def test_every_occurrence_is_reported(monkeypatch):
 
 def test_bad_json_gives_no_findings(monkeypatch):
     monkeypatch.setattr(llm, "ask_model", lambda system, text, schema: "sorry, I can't help")
-    assert llm.find_with_llm("anything") == []
+    assert llm.find_with_llm("my password is Biscuit2019") == []
 
 
-def test_ollama_down_gives_no_findings(monkeypatch):
+def test_ollama_down_gives_no_findings(monkeypatch, caplog):
     def down(system, text, schema):
         raise requests.ConnectionError("Ollama is not running")
     monkeypatch.setattr(llm, "ask_model", down)
-    assert llm.find_with_llm("anything") == []
+    assert llm.find_with_llm("my password is Biscuit2019") == []
+    assert "LLM layer skipped" in caplog.text
+
+
+def test_every_prompt_is_checked_even_without_keywords(monkeypatch):
+    """Detection first: no keyword filter decides whether the model looks at a prompt."""
+    calls = []
+    def answer(system, text, schema):
+        calls.append(system)
+        return json.dumps({"findings": []})
+    monkeypatch.setattr(llm, "ask_model", answer)
+
+    llm.find_with_llm("I log in with my dog's name, Biscuit2019")    # no 'password' word
+    assert calls == [llm.FIND_PROMPT]                                 # no code block -> no code question
 
 
 needs_ollama = pytest.mark.skipif(not llm.is_available(), reason="Ollama is not running")
