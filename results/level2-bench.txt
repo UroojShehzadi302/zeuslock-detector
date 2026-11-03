@@ -1,0 +1,8 @@
+=== Speed benchmark, level2, 50 dev prompts + 26 attacks ===
+
+  before (localhost, new connection, no cache)  mean   6.30 s   p50   5.26 s   p95  10.91 s   total   478.6 s
+  after  (127.0.0.1, reused connection, cache)  mean   4.02 s   p50   2.99 s   p95   7.60 s   total   305.7 s
+  after, same prompts again (cache hits)        mean   0.00 s   p50   0.00 s   p95   0.00 s   total     0.1 s
+
+  speedup: 1.6x faster on new prompts
+  identical findings: 76/76 prompts

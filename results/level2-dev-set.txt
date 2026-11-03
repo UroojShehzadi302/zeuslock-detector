@@ -1,0 +1,33 @@
+=== Level 2, regex + LLM ===
+
+Prompt level (alert / allow)
+  accuracy      92%  (46/50)
+  misses        2   dev-031, dev-037
+  false alarms  2   dev-042, dev-048
+
+Category level
+  category     precision  recall   tp  fp  fn
+  PAYMENT           100%     90%    9   0   1
+  CREDENTIAL        100%    100%   12   0   0
+  CONTACT            89%     89%    8   1   1
+  GOV_ID             75%    100%    3   1   0
+  NETWORK            80%     80%    4   1   1
+  SOURCE_CODE       100%    100%    3   0   0
+
+Value level (42 expected values)
+  exact 38   overlap 2   missed 2
+
+Speed (milliseconds per prompt)
+  mean 3782.9   p50 3075.8   p95 7026.3   max 11898.6
+
+Prompts that differ from the label (5)
+  dev-026  want alert ['CONTACT']  got alert ['GOV_ID']
+           note: label mistake: an SSN is GOV_ID, not CONTACT
+  dev-031  want alert ['NETWORK']  got allow []
+           note: label mistake: 1.1.1.1 is a public resolver, not sensitive
+  dev-037  want alert ['PAYMENT']  got allow []
+           note: debatable: the number fails Luhn, so it is not a real card
+  dev-042  want allow []  got alert ['NETWORK']
+           note: level2 only: ip-10-0-3-17 is the private IP 10.0.3.17 hidden in a hostname
+  dev-048  want allow []  got alert ['CONTACT']
+           note: debatable: a real email address is personal data

@@ -6,8 +6,6 @@
 The "AI" here is the same local model (Ollama), so the demo runs offline.
 """
 
-import requests
-
 from zeuslock.core import llm
 from zeuslock.level2.session import Session
 
@@ -20,7 +18,7 @@ ASSISTANT_PROMPT = (
 
 def ask_assistant(history: list[dict]) -> str:
     """Send the (anonymized) conversation to the local model, return its reply."""
-    response = requests.post(
+    response = llm.HTTP.post(
         f"{llm.OLLAMA_URL}/api/chat",
         json={
             "model": llm.MODEL,

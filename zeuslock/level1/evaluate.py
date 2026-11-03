@@ -2,6 +2,7 @@
 
     python -m zeuslock.level1.evaluate              # full detector (regex + LLM)
     python -m zeuslock.level1.evaluate --regex-only # regex layer alone, for comparison
+    python -m zeuslock.level1.evaluate --mode level2  # same dev set, Level 2 detector
 
 What is measured:
 - prompt level: misses (should alert, did not), false alarms (should allow, did not), accuracy
@@ -18,8 +19,6 @@ import statistics
 import time
 from pathlib import Path
 
-from zeuslock.core.merge import merge
-from zeuslock.core.patterns import find_all
 from zeuslock.detector import detect
 
 DEV_SET = Path(__file__).parent.parent.parent / "data" / "dev_set.jsonl"
@@ -33,13 +32,8 @@ LABEL_NOTES = {
     "dev-031": "label mistake: 1.1.1.1 is a public resolver, not sensitive",
     "dev-037": "debatable: the number fails Luhn, so it is not a real card",
     "dev-048": "debatable: a real email address is personal data",
+    "dev-042": "level2 only: ip-10-0-3-17 is the private IP 10.0.3.17 hidden in a hostname",
 }
-
-
-def detect_regex_only(text: str) -> dict:
-    """Same output as detect(), without the LLM layer."""
-    findings = merge(find_all(text), [])
-    return {"decision": "alert" if findings else "allow", "findings": findings}
 
 
 def load_dev_set(path: Path = DEV_SET) -> list[dict]:
@@ -156,10 +150,11 @@ def format_report(report: dict, title: str) -> str:
     return "\n".join(lines)
 
 
-def run(regex_only: bool = False, dev_set: Path = DEV_SET) -> str:
+def run(regex_only: bool = False, dev_set: Path = DEV_SET, mode: str = "level1") -> str:
     """Evaluate on the dev set and return the report text. Used by main.py too."""
-    detect_fn = detect_regex_only if regex_only else detect
-    title = "Level 1, regex only" if regex_only else "Level 1, regex + LLM"
+    def detect_fn(text):
+        return detect(text, mode=mode, use_llm=not regex_only)
+    title = mode.replace("level", "Level ") + ", " + ("regex only" if regex_only else "regex + LLM")
     return format_report(evaluate(load_dev_set(dev_set), detect_fn), title)
 
 
@@ -167,8 +162,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Evaluate the detector on the dev set.")
     parser.add_argument("--regex-only", action="store_true", help="skip the LLM layer")
     parser.add_argument("--dev-set", type=Path, default=DEV_SET)
+    parser.add_argument("--mode", choices=["level1", "level2"], default="level1")
     args = parser.parse_args()
-    print(run(args.regex_only, args.dev_set))
+    print(run(args.regex_only, args.dev_set, args.mode))
 
 
 if __name__ == "__main__":

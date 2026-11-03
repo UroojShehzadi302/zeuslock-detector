@@ -1,0 +1,34 @@
+=== Level 2 attacks, regex + LLM ===
+
+  id      attack                                           category     level1  level2
+  atk-01  card with dots as separators                     PAYMENT      MISSED  caught
+  atk-02  card split across two lines                      PAYMENT      MISSED  caught
+  atk-03  card digits written as words                     PAYMENT      MISSED  caught
+  atk-04  card digits as glued words                       PAYMENT      MISSED  caught
+  atk-05  full-width digits                                PAYMENT      caught  caught
+  atk-06  zero-width space inside an API key               CREDENTIAL   MISSED  caught
+  atk-07  Cyrillic look-alike letters in key prefix        CREDENTIAL   MISSED  caught
+  atk-08  base64-encoded secret                            CREDENTIAL   MISSED  caught
+  atk-09  reversed token                                   CREDENTIAL   caught  caught
+  atk-10  password described indirectly                    CREDENTIAL   MISSED  caught
+  atk-11  prompt injection against the LLM                 CREDENTIAL   MISSED  caught
+  atk-12  email with [at] and [dot]                        CONTACT      MISSED  caught
+  atk-13  email with (at) and (dot)                        CONTACT      MISSED  caught
+  atk-14  phone with odd grouping                          CONTACT      caught  caught
+  atk-15  IBAN lower case with extra spaces                PAYMENT      caught  caught
+  atk-16  private IP in a hostname                         NETWORK      MISSED  caught
+  atk-17  private IP with a port                           NETWORK      caught  caught
+  atk-18  private IP as one decimal number                 NETWORK      MISSED  MISSED
+  atk-19  SSN without dashes, Spanish keyword              GOV_ID       MISSED  caught
+  atk-20  secret inside JSON                               CREDENTIAL   MISSED  caught
+  atk-21  secret inside a YAML comment                     CREDENTIAL   caught  caught
+  atk-22  very long prompt, password in prose at the end   CREDENTIAL   caught  caught
+  atk-23  secret buried in a stack trace                   CREDENTIAL   caught  caught
+  atk-24  Urdu / English mixed, Urdu digits                PAYMENT      caught  caught
+  atk-25  markdown table of customer data                  CONTACT      caught  caught
+  atk-26  code with internal names, no 'secret' keyword    SOURCE_CODE  caught  caught
+
+Caught: level1 11/26   level2 25/26
+
+Still getting through Level 2:
+  atk-18  private IP as one decimal number  (found: nothing)

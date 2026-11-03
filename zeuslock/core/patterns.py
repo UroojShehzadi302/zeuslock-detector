@@ -93,10 +93,10 @@ def is_placeholder(value: str) -> bool:
     return any(word in lowered for word in PLACEHOLDER_WORDS)
 
 
-def find_with_rules(text: str) -> list[dict]:
-    """Run every rule in RULES over the text."""
+def find_with_rules(text: str, rules: list = RULES) -> list[dict]:
+    """Run every rule (default: RULES) over the text."""
     findings = []
-    for category, pattern, group, validator in RULES:
+    for category, pattern, group, validator in rules:
         for match in re.finditer(pattern, text):
             start, end = match.span(group)
             value = text[start:end]
