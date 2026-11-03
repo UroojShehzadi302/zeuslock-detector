@@ -156,15 +156,19 @@ def format_report(report: dict, title: str) -> str:
     return "\n".join(lines)
 
 
+def run(regex_only: bool = False, dev_set: Path = DEV_SET) -> str:
+    """Evaluate on the dev set and return the report text. Used by main.py too."""
+    detect_fn = detect_regex_only if regex_only else detect
+    title = "Level 1, regex only" if regex_only else "Level 1, regex + LLM"
+    return format_report(evaluate(load_dev_set(dev_set), detect_fn), title)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Evaluate the detector on the dev set.")
     parser.add_argument("--regex-only", action="store_true", help="skip the LLM layer")
     parser.add_argument("--dev-set", type=Path, default=DEV_SET)
     args = parser.parse_args()
-
-    detect_fn = detect_regex_only if args.regex_only else detect
-    title = "Level 1, regex only" if args.regex_only else "Level 1, regex + LLM"
-    print(format_report(evaluate(load_dev_set(args.dev_set), detect_fn), title))
+    print(run(args.regex_only, args.dev_set))
 
 
 if __name__ == "__main__":
