@@ -132,6 +132,5 @@ output token). Next steps that keep detection: a GPU, or running the code questi
 
 ## 7. AI-tool usage and time
 
-- AI tools: ChatGPT (free version) and Claude Code (an AI coding assistant) helped with code,
-  tests and documentation. Every part was reviewed, run and tested, and I can explain and change it.
+- AI tools: ChatGPT (free version) helped with code,tests and documentation. Every part was reviewed, run and tested, and I can explain and change it.
 - Time spent: about 12–15 hours over 3 days (4–5 hours per day).
