@@ -8,7 +8,7 @@ Runs fully offline: regex rules + validators, and a local model (`qwen2.5:3b`, 3
 
 | | Level 1 | Level 2 |
 |---|---|---|
-| Dev set accuracy (50 prompts, alert / allow) | **94 %** (47/50) | 92 % (46/50) |
+| Dev set accuracy (50 prompts, alert / allow) | **94 %** (47/50) | 94 % (46/50) |
 | Dev set, regex side only | 82 % (41/50) | 80 % (40/50) |
 | Attacks caught (26 adversarial prompts) | 11 / 26 | **25 / 26** |
 | Speed per prompt (mean, laptop CPU) | 4.4 s (p95 11.4 s) | 3.8 s (p95 7.0 s) |

@@ -145,6 +145,9 @@ def ask_model(system: str, text: str, schema: dict) -> str:
             "format": schema,
             "stream": False,
             "keep_alive": KEEP_ALIVE,
+            # Thinking models (qwen3) would write a long hidden reasoning first: slow on a CPU.
+            # Ignored by models that don't think.
+            "think": False,
             "options": {"temperature": 0},
         },
         timeout=TIMEOUT_SECONDS,

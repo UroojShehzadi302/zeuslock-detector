@@ -98,7 +98,7 @@ words, invisible characters, look-alike letters, base64, `[at]`/`[dot]`, prompt 
 |---|---|---|
 | Attacks caught (regex + LLM) | 11 / 26 | **25 / 26** |
 | Attacks caught (regex side only) | 8 / 26 | 21 / 26 |
-| Dev set accuracy | 94 % | 92 % (one extra alert: a private IP hidden in a hostname, dev-042) |
+| Dev set accuracy | 94 % | 94 % |
 | Speed per prompt (mean) | 4.4 s | 3.8 s |
 
 - **Still gets through:** a private IP written as one decimal number (`167772161` = 10.0.0.1).

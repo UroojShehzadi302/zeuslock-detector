@@ -1,7 +1,7 @@
 === Level 2, regex + LLM ===
 
 Prompt level (alert / allow)
-  accuracy      92%  (46/50)
+  accuracy      94%  
   misses        2   dev-031, dev-037
   false alarms  2   dev-042, dev-048
 
